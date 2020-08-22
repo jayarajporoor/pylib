@@ -1,4 +1,4 @@
-#String expression evaluator
+#Combined parsing/evaluating of expression strings without explicit AST generation.
 #Copyright Jayaraj Poroor 2020
 #Released under MIT License
 #
