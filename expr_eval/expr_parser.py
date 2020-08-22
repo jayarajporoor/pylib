@@ -40,9 +40,11 @@ def tokenize(input):
         yield current_token
 
 class Evaluator:
-    def __init__(self, tokenizer=tokenize):
+    def __init__(self, env, tokenizer=tokenize):
         self.returned_token = None
+        self.env = env
         self.tokenizer  = tokenizer
+        self.memoize = {}
 
     def putback_token(self, token):
         self.returned_token = token
@@ -62,8 +64,14 @@ class Evaluator:
                 return None
 
     def do(self, input):
-        tokens = self.tokenizer(input)
-        return self.eval_expr(tokens)
+        val = self.memoize.get(input, None)
+        if val is None:
+            tokens = self.tokenizer(input)
+            val = self.eval_expr(tokens)
+            self.memoize[input] = val
+        else:
+            print("Memoized")
+        return val
 
     def eval_expr(self, tokens):
         val = self.eval_term(tokens)
@@ -102,11 +110,13 @@ class Evaluator:
             try:
                 val = float(token)
             except ValueError:
-                raise ParseError("Undefined identifier: " + token)
+                val = self.env.get(token, None)
+                if val is None:
+                    raise ParseError("Undefined identifier: " + token)
         return val
 
 if __name__ == "__main__":
-    evaluator = Evaluator()
-    assert evaluator.do("1+2") == 3
-    assert evaluator.do("3*(1+2)") == 9
+    evaluator = Evaluator({'x':1, 'y':3})
+    assert evaluator.do("10+20") == 30
+    assert evaluator.do("3*(x+y)") == 12
     print(evaluator.do(sys.argv[1]))
