@@ -12,7 +12,9 @@
 #term ::= factor '*' expr | factor '/' expr | factor
 #factor ::= identifier | num | '(' expr ')'
 #
-
+#Note: Top-down parsing with this grammar introduces right associativity for operators.
+#e.g., 1 - 3 - 2 will be parsed as 1 - (3 - 2) = 0 rather than (1-3) -2 = -4.
+#The grammar need to be rewritten to avoid this issue or explict parenthesis must be provided.
 import sys
 
 class ParseError(Exception):
