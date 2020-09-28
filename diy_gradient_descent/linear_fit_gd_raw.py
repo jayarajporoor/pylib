@@ -1,9 +1,8 @@
 from sklearn.metrics import mean_squared_error
 import math
 
-def predict(Xpred, m):
-	return [m * x for x in Xpred]
-
+def predict(X, m):
+	return [m * x for x in X]
 
 def error(y, x, m):
     y_predict = x * m
@@ -14,9 +13,14 @@ def linear_fit(Xtrain, Ytrain, Xvalidate, Yvalidate, n_iterations, learning_rate
     print("Computing raw (inefficient) gradients ...")
     iteration_mse = []
     iteration_param = []
+    least_mse = math.inf
+    best_m = None
     for epoch in range(0, n_iterations):
         Yvalidate_pred = predict(Xvalidate, m)
         mse = mean_squared_error(Yvalidate, Yvalidate_pred)
+        if mse < least_mse:
+            best_m = m
+            least_mse = mse
         iteration_mse.append(mse)
         iteration_param.append(m)
 
@@ -30,4 +34,4 @@ def linear_fit(Xtrain, Ytrain, Xvalidate, Yvalidate, n_iterations, learning_rate
 
         m = m - learning_rate * batch_derror_dm
 
-    return (m, iteration_mse, iteration_param)
+    return (best_m, least_mse, iteration_mse, iteration_param)

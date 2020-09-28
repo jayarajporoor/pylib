@@ -3,6 +3,7 @@
 #Released under MIT License
 
 import sys
+import math
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
@@ -42,9 +43,10 @@ Yvalidate = Y[train_size:]
 
 #Train - returns 'm' : the learnt parameter, 'iteration_mse': progression of mse over iterations
 #'iteration_param' : progression of the learnt parameter over iterations
-m, iteration_mse, iteration_param = linear_fit(
+m, mse, iteration_mse, iteration_param = linear_fit(
 				Xtrain, Ytrain, Xvalidate, Yvalidate, n_iterations=10, learning_rate=0.0001, m=100)
 
+print("Best 'm' is", m, "with error: ", math.sqrt(mse)/max(Yvalidate), "%")
 #Plot the progression of error/learnt parameter over iterations
 plt.plot(iteration_param, iteration_mse, color='red')
 plt.show()
