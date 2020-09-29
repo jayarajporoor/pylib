@@ -1,10 +1,11 @@
 from sklearn.metrics import mean_squared_error
 import math
 
-#d(Yp - Y)^2/dm where Yp = m * X =  2(Yp - Y) * dYp/dm = 2(Yp-Y)*X
+#d(yp - y)^2/dm where yp = m * x =  2*(yp - y) * d(yp)/dm = 2*(yp-y)*x
 
-def predict(X, m):
-    return [m * x for x in X]
+def error(y, x, m):
+    y_predict = x * m
+    return (y - y_predict)**2
 
 def linear_fit(Xtrain, Ytrain, Xvalidate, Yvalidate, n_iterations, learning_rate, m):
     print("Computing gradients using derivative formula...")
@@ -13,11 +14,6 @@ def linear_fit(Xtrain, Ytrain, Xvalidate, Yvalidate, n_iterations, learning_rate
     least_mse = math.inf
     best_m = None
     for epoch in range(0, n_iterations):
-        Yvalidate_pred = predict(Xvalidate, m)
-        mse = mean_squared_error(Yvalidate, Yvalidate_pred)
-        if mse < least_mse:
-            best_m = m
-            least_mse = mse
 
         del_m = 0
         for x, y in zip(Xtrain, Ytrain):
@@ -26,6 +22,14 @@ def linear_fit(Xtrain, Ytrain, Xvalidate, Yvalidate, n_iterations, learning_rate
             del_m += dm
         del_m /= len(Ytrain)
         m = m - learning_rate * del_m
+
+        mse = 0
+        for x, y in zip(Xvalidate, Yvalidate):
+            mse += error(y, x, m)
+        mse /= len(Ytrain)
+        if mse < least_mse:
+            best_m = m
+            least_mse = mse
 
         iteration_mse.append(mse)
         iteration_param.append(m)

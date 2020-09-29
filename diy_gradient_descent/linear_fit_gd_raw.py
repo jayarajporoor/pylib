@@ -13,11 +13,9 @@ def linear_fit(Xtrain, Ytrain, Xvalidate, Yvalidate, n_iterations, learning_rate
     least_mse = math.inf
     best_m = None
     for epoch in range(0, n_iterations):
-        batch_derror_dm = 0
-        dm = 0.00001
         mse = 0
         mse_delta = 0
-
+        dm = 0.0000001
         for x, y in zip(Xtrain, Ytrain):
             mse += error(y, x, m)
             mse_delta += error(y, x, m+dm)
@@ -26,13 +24,17 @@ def linear_fit(Xtrain, Ytrain, Xvalidate, Yvalidate, n_iterations, learning_rate
         mse_delta /= len(Ytrain)
         dmse_dm = (mse_delta - mse)/dm
 
+        m = m - learning_rate * dmse_dm
+
+        mse = 0
+        for x, y in zip(Xvalidate, Yvalidate):
+            mse += error(y, x, m)
+        mse /= len(Ytrain)
         if mse < least_mse:
             best_m = m
             least_mse = mse
 
-        m = m - learning_rate * dmse_dm
-
         iteration_mse.append(mse)
         iteration_param.append(m)
-        
+
     return (best_m, least_mse, iteration_mse, iteration_param)
