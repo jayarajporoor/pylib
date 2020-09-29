@@ -18,8 +18,6 @@ def linear_fit(Xtrain, Ytrain, Xvalidate, Yvalidate, n_iterations, learning_rate
         if mse < least_mse:
             best_m = m
             least_mse = mse
-        iteration_mse.append(mse)
-        iteration_param.append(m)
 
         del_m = 0
         for x, y in zip(Xtrain, Ytrain):
@@ -28,4 +26,8 @@ def linear_fit(Xtrain, Ytrain, Xvalidate, Yvalidate, n_iterations, learning_rate
             del_m += dm
         del_m /= len(Ytrain)
         m = m - learning_rate * del_m
+
+        iteration_mse.append(mse)
+        iteration_param.append(m)
+
     return (best_m, least_mse, iteration_mse, iteration_param)

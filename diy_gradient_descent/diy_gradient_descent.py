@@ -10,7 +10,7 @@ from matplotlib import pyplot as plt
 if len(sys.argv) > 1 and sys.argv[1] == 'raw':
     from linear_fit_gd_raw import linear_fit
 else:
-    from linear_fit_gd import linear_fit
+    from linear_fit_gd_derivative import linear_fit
 
 #Read training data from CSV file
 train_data = pd.read_csv("./train.csv")
